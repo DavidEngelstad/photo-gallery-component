@@ -1,3 +1,5 @@
 node_modules
 npm-debug.log
 aws-pem
+newrelic_agent.log
+data.txt

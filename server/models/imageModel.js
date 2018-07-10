@@ -1,50 +1,61 @@
-const { Image } = require('../../db/schemas/index.js');
-const { BUCKET_NAME } = require('../../config/aws.config');
+const mongoose = require('mongoose');
+// const db = mongoose.connect('mongodb://localhost/product_images');
+const db = mongoose.connect('mongodb://13.57.26.40:27017/product_images');
+// const { Image } = require('../../db/schemas/index.js');
+const { Photo } = require('../../db/schemas/mongoModel.js');
 
 const imageModel = {
   get: (product_id, callback) => {
-    Image.findAll({
-      where: {
-        product_id: product_id
-      }
-    })
-    .then((res) => {
-      console.log('successfully queried db');
-      callback(null, res);
-    })
-    .catch((err) => {
-      console.log('error querying db', err);
-      callback(err, null);
-    })
+      // console.log('Here...', product_id);
+      Photo.find()
+        .where('product_id').equals(product_id)
+        .lean()
+        .then(data => {
+          // console.log('Data in image model...', data);
+          callback(null, data);
+        })
+        .catch(err => {
+          // console.log('Error getting data...', err);
+          callback(err, null);
+        })
   },
-  post: (product_id, name, callback) => {
-    Image.findOne({
-      where: {
-        product_id: product_id
-      }
-    })
-    .then((res) => {
-      let message = res ? 'product already exists in db, creating as non-primary' : `did not find any existing products with product_id = ${product_id}, creating as primary`;
-      console.log(message);
-      Image.create({
-        product_id: product_id,
-        is_primary: (res ? 0 : 1),
-        s3_url: `https://s3-us-west-1.amazonaws.com/${BUCKET_NAME}/${name}`
-      })
-      .then((response) => {
-        console.log('successfully posted to db');
-        callback(null, response);
-      })
-      .catch((err) => {
-        console.log('error posting to db', err);
-        callback(err, null);
-      })
-    })
-    .catch((err) => {
-      console.log('error querying db', err);
-      callback(err, null);
-    })
-  }
+  post: (data, callback) => {
+      console.log('imageModel.post....', data);
+      const image = new Photo(data);
+      image.save()
+        .then(data => {
+          console.log('Image succesfully posted to the database...', data);
+          callback(null, data);
+        })
+        .catch(err => {
+          console.log('Error posting to the database in Model...', err);
+          callback(err, null);
+        })
+    },
+    update: (id, params, callback) => {
+      console.log('Hit update endpoint...', id);
+      Photo.findOneAndUpdate({_id: id}, params)
+        .then(data => {
+          console.log('Successfully updated record...', data);
+          callback(null, data);
+        })
+        .catch(err => {
+          console.log('Error updating record...', err);
+          callback(err, null);
+        })
+    },
+    delete: (id, callback) => {
+      console.log('Hit delete endpoint...', id);
+      Photo.deleteOne({_id: id})
+        .then(data => {
+          console.log('Successfully deleted record...', data);
+          callback(null, data);
+        })
+        .catch(err => {
+          console.log('Error deleting record...', err);
+          callback(err, null);
+        })
+    }
 }
 
 module.exports = {

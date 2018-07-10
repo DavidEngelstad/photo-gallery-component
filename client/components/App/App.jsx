@@ -35,13 +35,13 @@ export default class App extends React.Component {
   }
 
   fetchImages() {
-    axios.get('http://ec2-54-174-114-166.compute-1.amazonaws.com:1337/products/images', {
+    axios.get('/products/images', {
       params: {
         productId: this.state.productId
       }
     })
     .then(res => {
-      console.log('fetch images successful');
+      console.log('fetch images successful', res);
       this.setState({
         images: res.data,
       }, () => {
@@ -57,6 +57,7 @@ export default class App extends React.Component {
   }
 
   setProfileImage() {
+    console.log('In set profile')
     if (this.state.images.length === 0) {
       this.setState({
         profileImage: NO_IMAGE_URL
@@ -65,7 +66,7 @@ export default class App extends React.Component {
       this.state.images.forEach(image => {
         if (image.is_primary === 1) {
           this.setState({
-            profileImage: image.s3_url
+            profileImage: image.img_url
           })
         }
       })
@@ -132,7 +133,7 @@ export default class App extends React.Component {
   postImage(e) {
     e.preventDefault();
     console.log(e.target);
-    axios.post('http://ec2-54-174-114-166.compute-1.amazonaws.com:1337/products/images', {
+    axios.post('/products/images', {
       productId: this.state.productId
     })
     .then((res) => {
@@ -208,9 +209,9 @@ export default class App extends React.Component {
                       <GalleryImage 
                         key={index}
                         selectedImage={this.state.selectedImage}
-                        isMatch = {this.state.selectedImage === image.s3_url}
+                        isMatch = {this.state.selectedImage === image.img_url}
                         index={index} 
-                        url={image.s3_url} 
+                        url={image.img_url} 
                         changeProfileImage={this.changeProfileImage} 
                         tempProfileImageOnHover={this.tempProfileImageOnHover} 
                         tempProfileImageOffHover={this.tempProfileImageOffHover}

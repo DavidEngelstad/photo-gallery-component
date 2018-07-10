@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const { ACCESS_KEY, SECRET_KEY, BUCKET_NAME } = require('../../config/aws.config');
+// const { ACCESS_KEY, SECRET_KEY, BUCKET_NAME } = require('../../config/aws.config');
 
 const postToAWS = (body, name, callback) => {
   const options = ({
