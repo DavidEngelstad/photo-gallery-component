@@ -42,7 +42,7 @@ const path = require('path');
 const common = {
   context: __dirname + '/client',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
@@ -51,8 +51,12 @@ const common = {
           presets: ['react', 'es2015', 'env']
         },
       },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+      },
     ],
-  }
+  },
 };
 
 const client = {

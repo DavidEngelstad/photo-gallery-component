@@ -7,7 +7,17 @@
   <title>Capstone FE</title>
 </head>
 <body style="margin: 0px">
-  <div id="gallery">I shouldn't even be here, man</div>
-  <script src="bundle.js"></script>
+    <div id="app"></div>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="http://localhost:3000/app.js"></script>
+    <script>
+      ReactDOM.render(
+        React.createElement(App),
+        document.getElementById('app')
+      );
+    </script>
+  <!-- <div id="gallery">I shouldn't even be here, man</div>
+  <script src="bundle.js"></script> -->
 </body>
 </html>
